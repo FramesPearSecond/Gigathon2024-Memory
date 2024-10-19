@@ -8,32 +8,29 @@ namespace Memory
 {
     internal class Board
     {
-        public Card[][] cards;
+        public Card[,] cards;
         public int size;
 
         public Board(int size)
         {
-            cards = new Card[size][];
+            cards = new Card[size, size];
 
             this.size = size;
 
-            int idCards = 0;
+            int cardId = 0;
 
-            for (int j = 0; j < cards.Length; j++)
-            {
-                cards[j] = new Card[this.size];
-                
-                for (int i = 0; i < cards.Length; i++)
+            for (int j = 0; j < size; j++)
+            {    
+                for (int i = 0; i < size; i++)
                 {
+                    cards[j,i] = new Card(cardId, (cardId) / 2);
 
-                    cards[j][i] = new Card(idCards, (idCards) / 2);
-
-                    ++idCards;
+                    cardId++;
                 }
             }
 
-            cards[0][0].uncoverd = true;
-            cards[1][1].uncoverd = true;
+            cards[0,0].uncoverd = true;
+            cards[1,1].uncoverd = true;
 
             Console.WriteLine(Card.numOfCards);
 

@@ -11,16 +11,16 @@ namespace Memory
         static void Main(string[] args)
         {
 
-            Player player1 = new Player("Stachu", 12);
-            Player player2 = new Player("Aniela", 0);
+            Player player1 = new Player("Gracz 1", 12);
+            Player player2 = new Player("Gracz 2", 0);
 
             Board board = new Board(6);
 
-            Animator display = new Animator(board, player1, player2);
+            Animator display = new Animator(board.cards, board.size, player1, player2);
 
             display.displayPlayer(false);
 
-            display.displayBoard(7);
+            display.displayBoard();
 
             display.displayPlayer(true);
 

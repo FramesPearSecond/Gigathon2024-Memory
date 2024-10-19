@@ -9,16 +9,19 @@ namespace Memory
     internal class Board
     {
         public Card[][] cards;
+        public int size;
 
         public Board(int size)
         {
             cards = new Card[size][];
 
+            this.size = size;
+
             int idCards = 0;
 
-            for (int j = 0; j < size; j++)
+            for (int j = 0; j < cards.Length; j++)
             {
-                cards[j] = new Card[size];
+                cards[j] = new Card[this.size];
                 
                 for (int i = 0; i < cards.Length; i++)
                 {
@@ -26,8 +29,6 @@ namespace Memory
                     cards[j][i] = new Card(idCards, (idCards) / 2);
 
                     ++idCards;
-
-                    Console.WriteLine("Card {0}; Shape: {1}", cards[j][i].id, cards[j][i].shape);
                 }
             }
 

@@ -12,6 +12,8 @@ namespace Memory
         Player player1;
         Player player2;
 
+        char[] shapes = { '\u25FB', '\u25A7', '\u25B3', '\u25EF', '\u25C8' };
+
         public Animator(Board board, Player p1, Player p2)
         {
             this.board = board;
@@ -58,9 +60,45 @@ namespace Memory
             {
                 foreach (Card card in cards)
                 {
-                    Console.Write("[]");
+                    Console.Write("[#]");
                 }
                 Console.Write("\n");
+            }
+            Console.ResetColor();
+        }
+
+        public void displayBoard(int id)
+        {
+            Console.OutputEncoding = Encoding.UTF8;
+            Console.ForegroundColor = ConsoleColor.White;
+
+            foreach (Card[] cards in board.cards)
+            {
+                foreach (Card card in cards)
+                {
+                    displayCard(card, id);
+                }
+                Console.Write("\n");
+            }
+
+            Console.ResetColor();
+        }
+
+        private void displayCard(Card card, int id)
+        {
+            char thumbnail = (card.uncoverd) ? shapes[card.shape] : '#' ;
+
+            if (card.id == id)
+            {
+                Console.BackgroundColor = ConsoleColor.Yellow;
+                Console.ForegroundColor = ConsoleColor.Black;
+                Console.Write("[{0:c}]", thumbnail);
+                Console.ResetColor();
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.Write("[{0:c}]", thumbnail);
             }
         }
     }

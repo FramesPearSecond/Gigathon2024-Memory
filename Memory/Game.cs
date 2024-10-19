@@ -14,13 +14,13 @@ namespace Memory
             Player player1 = new Player("Stachu", 12);
             Player player2 = new Player("Aniela", 0);
 
-            Board board = new Board(10);
+            Board board = new Board(6);
 
             Animator display = new Animator(board, player1, player2);
 
             display.displayPlayer(false);
 
-            display.displayBoard();
+            display.displayBoard(7);
 
             display.displayPlayer(true);
 

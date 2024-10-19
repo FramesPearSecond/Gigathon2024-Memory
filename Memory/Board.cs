@@ -32,6 +32,9 @@ namespace Memory
                 }
             }
 
+            cards[0][0].uncoverd = true;
+            cards[1][1].uncoverd = true;
+
             Console.WriteLine(Card.numOfCards);
 
         }

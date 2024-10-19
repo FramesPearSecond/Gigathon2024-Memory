@@ -17,9 +17,12 @@ namespace Memory
         int[][] viewBoard;
 
         char[] shapes = { '\u25FB', '\u25A7', '\u25B3', '\u25EF', '\u25C8' };
+        ConsoleColor[] colors = { ConsoleColor.White, ConsoleColor.Green, ConsoleColor.Blue, ConsoleColor.Magenta, ConsoleColor.Yellow };
 
         public Animator(Card[,] board, int size, Player p1, Player p2)
         {
+            Console.OutputEncoding = Encoding.UTF8;
+
             this.board = board;
             this.size = size;
             player1 = p1;
@@ -65,42 +68,51 @@ namespace Memory
 
         public void displayBoard()
         {
+            Console.ForegroundColor = ConsoleColor.DarkGray;
+
             foreach (int[] card in viewBoard)
             {
                 if (card[0] % size == 0 && card[0] != 0)
                 {
                     Console.Write("\n");
                 }
-                Console.Write("[#]");
-            }
 
+                displayCard(card[1], card[2]);
+            }
             Console.WriteLine();
-            
+
+            Console.ResetColor();
+
         }
 
         public void displayBoard(int id)
         {
             
-
-            Console.ResetColor();
         }
 
-        private void displayCard(Card card, int id)
+        private void displayCard(int shape, int state)
         {
-            char thumbnail = (card.uncoverd) ? shapes[card.shape] : '#' ;
+            char thumbnail = '\u0023';
+            Console.ForegroundColor = ConsoleColor.DarkGray;
 
-            if (card.id == id)
+            switch (state)
             {
-                Console.BackgroundColor = ConsoleColor.Yellow;
-                Console.ForegroundColor = ConsoleColor.Black;
-                Console.Write("[{0:c}]", thumbnail);
-                Console.ResetColor();
+                case 1:
+                    Console.ForegroundColor = ConsoleColor.Black;
+                    Console.BackgroundColor = ConsoleColor.Gray;
+                    break;
+                case 2:
+                    thumbnail = shapes[shape % 5];
+                    break;
+                case 3:
+                    thumbnail = shapes[shape % 5];
+                    Console.ForegroundColor = colors[shape % 6];
+                    Console.BackgroundColor = ConsoleColor.Gray;
+                    break;
             }
-            else
-            {
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.Write("[{0:c}]", thumbnail);
-            }
+            Console.Write("[{0:c}]", thumbnail);
+
+            Console.ResetColor();
         }
     }
 }

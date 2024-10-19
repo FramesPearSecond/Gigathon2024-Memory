@@ -16,8 +16,8 @@ namespace Memory
 
         int[][] viewBoard;
 
-        char[] shapes = { '\u25FB', '\u25A7', '\u25B3', '\u25EF', '\u25C8' };
-        ConsoleColor[] colors = { ConsoleColor.White, ConsoleColor.Green, ConsoleColor.Blue, ConsoleColor.Magenta, ConsoleColor.Yellow };
+        char[] shapes = { '\u25FB', '\u25A7', '\u25B3', '\u25EF', '\u25CA', '\u25BD', '\u25C8', '\u25a3' };
+        ConsoleColor[] colors = { ConsoleColor.White, ConsoleColor.Green, ConsoleColor.Blue, ConsoleColor.Magenta, ConsoleColor.DarkYellow, ConsoleColor.DarkRed, ConsoleColor.Yellow };
 
         public Animator(Card[,] board, int size, Player p1, Player p2)
         {
@@ -30,9 +30,12 @@ namespace Memory
 
             viewBoard = new int[board.Length][];
 
+            int idTracker = 0;
             foreach(Card card in board)
             {
-                viewBoard[card.id] = new int[3] {card.id, card.shape, 0};
+                viewBoard[idTracker] = new int[3] {card.id, card.shape, 3};
+                ++idTracker;
+                Console.WriteLine(card.id);
             }
         }
 
@@ -70,14 +73,15 @@ namespace Memory
         {
             Console.ForegroundColor = ConsoleColor.DarkGray;
 
+            int linesCounter = 0;
+
             foreach (int[] card in viewBoard)
             {
-                if (card[0] % size == 0 && card[0] != 0)
-                {
-                    Console.Write("\n");
-                }
+               if(linesCounter % size == 0) { Console.Write("\n"); }
 
                 displayCard(card[1], card[2]);
+
+                linesCounter++;
             }
             Console.WriteLine();
 
@@ -87,7 +91,8 @@ namespace Memory
 
         public void displayBoard(int id)
         {
-            
+            resetState();
+            viewBoard[id][2] += 1;
         }
 
         private void displayCard(int shape, int state)
@@ -102,17 +107,30 @@ namespace Memory
                     Console.BackgroundColor = ConsoleColor.Gray;
                     break;
                 case 2:
-                    thumbnail = shapes[shape % 5];
+                    thumbnail = shapes[shape % (shapes.Length - 1)];
                     break;
                 case 3:
-                    thumbnail = shapes[shape % 5];
-                    Console.ForegroundColor = colors[shape % 6];
+                    thumbnail = shapes[shape % shapes.Length];
+                    Console.ForegroundColor = colors[shape % colors.Length];
                     Console.BackgroundColor = ConsoleColor.Gray;
                     break;
             }
-            Console.Write("[{0:c}]", thumbnail);
+            Console.Write("[{0}]", thumbnail);
 
             Console.ResetColor();
+        }
+
+        private void resetState()
+        {
+            foreach(int[] card in viewBoard){
+                switch (card[2])
+                {
+                    case 1:
+                        card[2] = 0; break;
+                    case 3:
+                        card[2] = 2; break;
+                }
+            }
         }
     }
 }

@@ -12,7 +12,6 @@ namespace Memory
         {
             this.id = id;
             this.shape = shape;
-            uncoverd = false;
             numOfCards++;
         }
     }

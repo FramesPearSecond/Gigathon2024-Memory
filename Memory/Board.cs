@@ -29,11 +29,44 @@ namespace Memory
                 }
             }
 
-            cards[0,0].uncoverd = true;
-            cards[1,1].uncoverd = true;
+            cards = shuffling(cards);
+
+            foreach (Card card in cards)
+            {
+                Console.WriteLine(card.id);
+            }
 
             Console.WriteLine(Card.numOfCards);
 
+        }
+
+        private Card[,] shuffling(Card[,] matrix)
+        {
+            Card[,] shuffeld = new Card[size, size];
+
+            Random r = new Random();
+            bool[,] positions = new bool[size,size];
+
+            int newRow;
+            int newCol;
+            
+
+            foreach(Card card in matrix)
+            {
+                //Console.WriteLine(card.id);
+                do
+                {
+                    newCol = r.Next(0, size);
+                    newRow = r.Next(0, size);
+                }
+                while (positions[newRow, newCol]);
+
+                shuffeld[newRow, newCol] = card;
+                positions[newRow, newCol] = true;
+                //Console.WriteLine("[{0},{1}] {2}", newRow, newCol, shuffeld[newRow, newCol].id);
+            }
+
+            return shuffeld;
         }
     }
 }

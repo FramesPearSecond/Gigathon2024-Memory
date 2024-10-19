@@ -14,7 +14,7 @@ namespace Memory
             Player player1 = new Player("Gracz 1", 12);
             Player player2 = new Player("Gracz 2", 0);
 
-            Board board = new Board(6);
+            Board board = new Board(8);
 
             Animator display = new Animator(board.cards, board.size, player1, player2);
 
@@ -23,6 +23,8 @@ namespace Memory
             display.displayBoard();
 
             display.displayPlayer(true);
+
+            
 
             Console.ReadLine();
         }

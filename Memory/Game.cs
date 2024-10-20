@@ -21,8 +21,14 @@ namespace Memory
             //display.displayPlayer(false);
 
             display.displayBoard();
-            display.displayCardSelection(35, false);
-            display.displayCardSelection(16, true);
+            display.displayCardSelection(35, false, false);
+            display.displayCardSelection(34, false, false);
+            display.displayCardSelection(33, false, false);
+            display.displayCardSelection(32, false, false);
+            display.displayCardSelection(32, true, false);
+            display.displayCardSelection(26, false, true);
+            display.displayCardSelection(20, false, true);
+            display.displayCardSelection(20, true, true);
             display.cover();
             display.displayBoard();
 

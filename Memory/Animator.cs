@@ -16,10 +16,10 @@ namespace Memory
 
         int[][] viewBoard;
 
-        int[] checkedCards = new int[2];
+        int[] checkedCards = {-1, -1};
 
         char[] shapes = { '\u25FB', '\u25A7', '\u25B3', '\u25EF', '\u25CA', '\u25BD', '\u25C8', '\u25a3' };
-        ConsoleColor[] colors = { ConsoleColor.White, ConsoleColor.Green, ConsoleColor.Blue, ConsoleColor.Magenta, ConsoleColor.DarkYellow, ConsoleColor.DarkRed, ConsoleColor.Yellow };
+        ConsoleColor[] colors = { ConsoleColor.White, ConsoleColor.Green, ConsoleColor.DarkCyan, ConsoleColor.Magenta, ConsoleColor.DarkYellow, ConsoleColor.DarkRed, ConsoleColor.Yellow };
 
         public Animator(Card[,] board, int size, Player p1, Player p2)
         {
@@ -32,10 +32,12 @@ namespace Memory
 
             viewBoard = new int[board.Length][];
 
+            int idTracker = 0;
             foreach(Card card in board)
             {
-                viewBoard[card.id] = new int[3] {card.id, card.shape, 0};
-            }
+                viewBoard[idTracker] = new int[3] {card.id, card.shape, 0};
+                idTracker++;
+            }   
         }
 
         public void displayPlayer(bool p)
@@ -88,9 +90,17 @@ namespace Memory
 
         }
 
-        public void displayCardSelection(int id, bool whichCard)
+        public void displayCardSelection(int id, bool isSelected, bool whichCard)
         {
-            uncover(id, whichCard);
+            resetState();
+            if (isSelected)
+            {
+                uncover(id, whichCard);
+            }
+            else
+            {
+                viewBoard[id][2] += 1;
+            }
             displayBoard();
         }
 
@@ -99,12 +109,12 @@ namespace Memory
             if (!whichCard)
             {//first card
                 viewBoard[id][2] = 3;
-                checkedCards[0] = viewBoard[id][0];
+                checkedCards[0] = id;
             }
             else
             {//second card
                 viewBoard[id][2] = 3;
-                checkedCards[1] = viewBoard[id][0];
+                checkedCards[1] = id;
             }
         }
 
@@ -113,7 +123,8 @@ namespace Memory
             viewBoard[checkedCards[0]][2] = 0;
             viewBoard[checkedCards[1]][2] = 0;
 
-            Array.Clear(checkedCards, 0, checkedCards.Length);
+            checkedCards[0] = -1;
+            checkedCards[0] = -1;
         }
 
         private void displayCard(int shape, int state)
@@ -125,7 +136,7 @@ namespace Memory
             {
                 case 1:
                     Console.ForegroundColor = ConsoleColor.Black;
-                    Console.BackgroundColor = ConsoleColor.Gray;
+                    Console.BackgroundColor = ConsoleColor.DarkGray;
                     break;
                 case 2:
                     thumbnail = shapes[shape % (shapes.Length - 1)];
@@ -143,17 +154,23 @@ namespace Memory
 
         private void resetState()
         {
+            int indexTracker = 0;
+
             foreach(int[] card in viewBoard){
-                if(Array.IndexOf(checkedCards, card[0])  >= 0){
+                if (Array.IndexOf(checkedCards, indexTracker) > -1){
                     card[2] = 3;
                 }
-                switch (card[2])
+                else
                 {
-                    case 1:
-                        card[2] = 0; break;
-                    case 3:
-                        card[2] = 2; break;
+                    switch (card[2])
+                    {
+                        case 1:
+                            card[2] = 0; break;
+                        case 3:
+                            card[2] = 2; break;
+                    }
                 }
+                indexTracker++;
             }
         }
     }

@@ -29,18 +29,18 @@ namespace Memory
                 }
             }
 
-            cards = shuffling(cards);
+            shuffling();
 
-            foreach (Card card in cards)
-            {
-                Console.WriteLine(card.id);
-            }
+            //foreach (Card card in cards)
+            //{
+            //    Console.WriteLine(card.id);
+            //}
 
-            Console.WriteLine(Card.numOfCards);
+            //Console.WriteLine(Card.numOfCards);
 
         }
 
-        private Card[,] shuffling(Card[,] matrix)
+        private void shuffling()
         {
             Card[,] shuffeld = new Card[size, size];
 
@@ -51,7 +51,7 @@ namespace Memory
             int newCol;
             
 
-            foreach(Card card in matrix)
+            foreach(Card card in this.cards)
             {
                 //Console.WriteLine(card.id);
                 do
@@ -66,7 +66,7 @@ namespace Memory
                 //Console.WriteLine("[{0},{1}] {2}", newRow, newCol, shuffeld[newRow, newCol].id);
             }
 
-            return shuffeld;
+            this.cards = shuffeld;
         }
     }
 }

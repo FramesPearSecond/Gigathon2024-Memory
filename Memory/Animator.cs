@@ -16,6 +16,8 @@ namespace Memory
 
         int[][] viewBoard;
 
+        int[] checkedCards = new int[2];
+
         char[] shapes = { '\u25FB', '\u25A7', '\u25B3', '\u25EF', '\u25CA', '\u25BD', '\u25C8', '\u25a3' };
         ConsoleColor[] colors = { ConsoleColor.White, ConsoleColor.Green, ConsoleColor.Blue, ConsoleColor.Magenta, ConsoleColor.DarkYellow, ConsoleColor.DarkRed, ConsoleColor.Yellow };
 
@@ -30,12 +32,9 @@ namespace Memory
 
             viewBoard = new int[board.Length][];
 
-            int idTracker = 0;
             foreach(Card card in board)
             {
-                viewBoard[idTracker] = new int[3] {card.id, card.shape, 3};
-                ++idTracker;
-                Console.WriteLine(card.id);
+                viewBoard[card.id] = new int[3] {card.id, card.shape, 0};
             }
         }
 
@@ -89,10 +88,32 @@ namespace Memory
 
         }
 
-        public void displayBoard(int id)
+        public void displayCardSelection(int id, bool whichCard)
         {
-            resetState();
-            viewBoard[id][2] += 1;
+            uncover(id, whichCard);
+            displayBoard();
+        }
+
+        public void uncover(int id, bool whichCard)
+        {
+            if (!whichCard)
+            {//first card
+                viewBoard[id][2] = 3;
+                checkedCards[0] = viewBoard[id][0];
+            }
+            else
+            {//second card
+                viewBoard[id][2] = 3;
+                checkedCards[1] = viewBoard[id][0];
+            }
+        }
+
+        public void cover()
+        {
+            viewBoard[checkedCards[0]][2] = 0;
+            viewBoard[checkedCards[1]][2] = 0;
+
+            Array.Clear(checkedCards, 0, checkedCards.Length);
         }
 
         private void displayCard(int shape, int state)
@@ -123,6 +144,9 @@ namespace Memory
         private void resetState()
         {
             foreach(int[] card in viewBoard){
+                if(Array.IndexOf(checkedCards, card[0])  >= 0){
+                    card[2] = 3;
+                }
                 switch (card[2])
                 {
                     case 1:

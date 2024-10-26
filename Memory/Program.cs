@@ -10,6 +10,7 @@ namespace Memory
     {
         static void Main(string[] args)
         {
+            Game memory = new Game();
         }
     }
 }

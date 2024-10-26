@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Memory
 {
@@ -10,6 +11,20 @@ namespace Memory
     {
         public Card[,] cards;
         public int size;
+
+        public Card card1;
+        public Card card2;
+
+        char[] shapes = { '\u25FB', '\u25A7', '\u25B3', '\u25EF', '\u25CA', '\u25BD', '\u25C8', '\u25a3' };
+        ConsoleColor[] colors = {
+            ConsoleColor.White,
+            ConsoleColor.Green,
+            ConsoleColor.DarkCyan,
+            ConsoleColor.Magenta,
+            ConsoleColor.DarkYellow,
+            ConsoleColor.DarkRed,
+            ConsoleColor.Yellow
+        };
 
         public Board(int size)
         {
@@ -23,7 +38,13 @@ namespace Memory
             {    
                 for (int i = 0; i < size; i++)
                 {
-                    cards[j,i] = new Card(cardId, (cardId) / 2);
+
+                    int id = cardId;
+                    int image = (cardId / 2);
+                    char shape = shapes[image % shapes.Length];
+                    ConsoleColor color = colors[image % colors.Length];
+
+                    cards[j, i] = new Card(id, shape, color);
 
                     cardId++;
                 }
@@ -31,16 +52,9 @@ namespace Memory
 
             shuffling();
 
-            //foreach (Card card in cards)
-            //{
-            //    Console.WriteLine(card.id);
-            //}
-
-            //Console.WriteLine(Card.numOfCards);
-
         }
 
-        private void shuffling()
+        void shuffling()
         {
             Card[,] shuffeld = new Card[size, size];
 
@@ -67,6 +81,35 @@ namespace Memory
             }
 
             this.cards = shuffeld;
+        }
+    
+        public void isPair(int position)
+        {
+            if(card1 == null)
+            {
+                foreach (Card card in cards)
+                {
+                    if(card.id == position)
+                    {
+                        card1 = card;
+                    }
+                }
+            }
+            else
+            {
+                foreach (Card card in cards)
+                {
+                    if (card.id == position)
+                    {
+                        card2 = card;
+                    }
+                }
+
+                if(card1.shape == card2.shape)
+                {
+
+                }
+            }
         }
     }
 }

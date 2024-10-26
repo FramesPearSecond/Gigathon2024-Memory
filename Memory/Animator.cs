@@ -14,13 +14,6 @@ namespace Memory
 
         int size;
 
-        int[][] viewBoard;
-
-        int[] checkedCards = {-1, -1};
-
-        char[] shapes = { '\u25FB', '\u25A7', '\u25B3', '\u25EF', '\u25CA', '\u25BD', '\u25C8', '\u25a3' };
-        ConsoleColor[] colors = { ConsoleColor.White, ConsoleColor.Green, ConsoleColor.DarkCyan, ConsoleColor.Magenta, ConsoleColor.DarkYellow, ConsoleColor.DarkRed, ConsoleColor.Yellow };
-
         public Animator(Card[,] board, int size, Player p1, Player p2)
         {
             Console.OutputEncoding = Encoding.UTF8;
@@ -28,16 +21,16 @@ namespace Memory
             this.board = board;
             this.size = size;
             player1 = p1;
-            player2 = p2;
+            player2 = p2; 
+        }
 
-            viewBoard = new int[board.Length][];
+        public void uiDisplay()
+        {
+            Console.Clear();
+            displayPlayer(false);
+            displayBoard();
+            displayPlayer(true);
 
-            int idTracker = 0;
-            foreach(Card card in board)
-            {
-                viewBoard[idTracker] = new int[3] {card.id, card.shape, 0};
-                idTracker++;
-            }   
         }
 
         public void displayPlayer(bool p)
@@ -72,15 +65,14 @@ namespace Memory
 
         public void displayBoard()
         {
-            Console.ForegroundColor = ConsoleColor.DarkGray;
 
             int linesCounter = 0;
 
-            foreach (int[] card in viewBoard)
+            foreach (Card card in board)
             {
                if(linesCounter % size == 0) { Console.Write("\n"); }
 
-                displayCard(card[1], card[2]);
+                displayCard(card);
 
                 linesCounter++;
             }
@@ -90,60 +82,69 @@ namespace Memory
 
         }
 
-        public void displayCardSelection(int id, bool isSelected, bool whichCard)
+        public void displayCardSelection(Cursor point)
         {
             resetState();
-            if (isSelected)
-            {
-                uncover(id, whichCard);
-            }
-            else
-            {
-                viewBoard[id][2] += 1;
-            }
+            
+            Card selectedCard = board[point.X, point.Y];
+
+            selectCard(selectedCard.state);
+
             displayBoard();
         }
 
-        public void uncover(int id, bool whichCard)
-        {
-            if (!whichCard)
-            {//first card
-                viewBoard[id][2] = 3;
-                checkedCards[0] = id;
-            }
-            else
-            {//second card
-                viewBoard[id][2] = 3;
-                checkedCards[1] = id;
-            }
-        }
+        //public void uncover(int id, bool whichCard)
+        //{
+        //    if (!whichCard)
+        //    {//first card
+        //        viewBoard[id][2] = 3;
+        //        checkedCards[0] = id;
+        //    }
+        //    else
+        //    {//second card
+        //        viewBoard[id][2] = 3;
+        //        checkedCards[1] = id;
+        //    }
+        //}
 
-        public void cover()
-        {
-            viewBoard[checkedCards[0]][2] = 0;
-            viewBoard[checkedCards[1]][2] = 0;
+        //public void cover()
+        //{
+        //    viewBoard[checkedCards[0]][2] = 0;
+        //    viewBoard[checkedCards[1]][2] = 0;
 
-            checkedCards[0] = -1;
-            checkedCards[0] = -1;
-        }
+        //    checkedCards[0] = -1;
+        //    checkedCards[0] = -1;
+        //}
 
-        private void displayCard(int shape, int state)
+        private void displayCard(Card card)
         {
             char thumbnail = '\u0023';
-            Console.ForegroundColor = ConsoleColor.DarkGray;
 
-            switch (state)
+            switch (card.state)
             {
-                case 1:
+                case State.Covered:
+                    Console.ForegroundColor = ConsoleColor.DarkGray;
+                    break;
+                case State.CoveredSelected:
                     Console.ForegroundColor = ConsoleColor.Black;
                     Console.BackgroundColor = ConsoleColor.DarkGray;
                     break;
-                case 2:
-                    thumbnail = shapes[shape % (shapes.Length - 1)];
+                case State.Uncovered:
+                    thumbnail = card.shape;
+                    Console.ForegroundColor = ConsoleColor.Gray;
                     break;
-                case 3:
-                    thumbnail = shapes[shape % shapes.Length];
-                    Console.ForegroundColor = colors[shape % colors.Length];
+                case State.UncoveredSelected:
+                    thumbnail = card.shape;
+                    Console.ForegroundColor = card.color;
+                    Console.BackgroundColor = ConsoleColor.DarkGray;
+                    break;
+                case State.Choosed:
+                    thumbnail = card.shape;
+                    Console.ForegroundColor = card.color;
+                    break;
+                case State.ChoosedSelected:
+                    thumbnail = card.shape;
+                    Console.ForegroundColor = card.color;
                     Console.BackgroundColor = ConsoleColor.Gray;
                     break;
             }
@@ -152,25 +153,36 @@ namespace Memory
             Console.ResetColor();
         }
 
+        private State selectCard(State card)
+        {
+            switch (card)
+            {
+                case State.Uncovered:
+                    return State.UncoveredSelected;
+                    break;
+                case State.Choosed:
+                    return State.ChoosedSelected;
+                    break;
+                default:
+                    return State.CoveredSelected;
+                    break;
+            }
+        }
         private void resetState()
         {
-            int indexTracker = 0;
-
-            foreach(int[] card in viewBoard){
-                if (Array.IndexOf(checkedCards, indexTracker) > -1){
-                    card[2] = 3;
-                }
-                else
+            foreach(Card card in board){
+                switch (card.state)
                 {
-                    switch (card[2])
-                    {
-                        case 1:
-                            card[2] = 0; break;
-                        case 3:
-                            card[2] = 2; break;
-                    }
-                }
-                indexTracker++;
+                    case State.CoveredSelected:
+                        card.state = State.Covered;
+                        break;
+                    case State.UncoveredSelected:
+                        card.state = State.Uncovered;
+                        break;
+                    case State.ChoosedSelected:
+                        card.state = State.Choosed;
+                        break;
+                }   
             }
         }
     }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -32,7 +33,7 @@ namespace Memory
             displayPlayer(true, active);
         }
 
-        public void displayPlayer(bool p, bool a)
+        void displayPlayer(bool p, bool a)
         {
             string name;
             ConsoleColor color;
@@ -56,22 +57,26 @@ namespace Memory
 
 
 
-            string hr = new string('=', size*3);
+            string upHr = new string('\u2550', (size * 3)-2);
+            upHr = '\u2552' + upHr + '\u2555';
+
+            string boHr = new string('\u2550', (size * 3) - 2);
+            boHr = '\u2558' + boHr + '\u255B';
 
             Console.ForegroundColor = color;
 
-            Console.WriteLine(hr);
+            Console.WriteLine(upHr);
 
             Console.BackgroundColor = bgColor;
             Console.WriteLine(name.PadLeft(padding));
             Console.BackgroundColor = ConsoleColor.Black;
 
-            Console.WriteLine(hr);
+            Console.WriteLine(boHr);
 
             Console.ResetColor();
         }
 
-        public void displayBoard()
+        void displayBoard()
         {
 
             int linesCounter = 0;
@@ -90,6 +95,20 @@ namespace Memory
 
         }
 
+        public static string displayTitle()
+        {
+            string title = 
+                   " __    __     ______     __    __     ______     ______     __  __    \n" +
+                  "/\\ \"-./  \\   /\\  ___\\   /\\ \"-./  \\   /\\  __ \\   /\\  == \\   /\\ \\_\\ \\   \n" +
+                  "\\ \\ \\-./\\ \\  \\ \\  __\\   \\ \\ \\-./\\ \\  \\ \\ \\/\\ \\  \\ \\  __<   \\ \\____ \\  \n" +
+                  " \\ \\_\\ \\ \\_\\  \\ \\_____\\  \\ \\_\\ \\ \\_\\  \\ \\_____\\  \\ \\_\\ \\_\\  \\/\\_____\\ \n" +
+                  "  \\/_/  \\/_/   \\/_____/   \\/_/  \\/_/   \\/_____/   \\/_/ /_/   \\/_____/ ";
+            
+            Console.WriteLine(title);
+
+            return title;
+        }
+
         public void displayCardSelection(Cursor point)
         {
             resetState();
@@ -101,9 +120,9 @@ namespace Memory
             displayBoard();
         }
 
-        private void displayCard(Card card)
+        void displayCard(Card card)
         {
-            char thumbnail = '\u0023';
+            char thumbnail = '\u2573';
 
             switch (card.state)
             {
@@ -139,7 +158,7 @@ namespace Memory
             Console.ResetColor();
         }
 
-        private State selectCard(State card)
+        State selectCard(State card)
         {
             switch (card)
             {
@@ -154,7 +173,7 @@ namespace Memory
                     break;
             }
         }
-        private void resetState()
+        void resetState()
         {
             foreach(Card card in board){
                 switch (card.state)
@@ -170,6 +189,35 @@ namespace Memory
                         break;
                 }   
             }
+        }
+        
+        public static void displayMainMenu(string[] options, int selected)
+        {
+            
+            string title = displayTitle();
+            int size = title.Length / 16;
+            int padding = size * 2;
+
+            string up = '\u2554' + new string('\u2550', size - 2) + '\u2557';
+            string bottom = '\u255A' + new string('\u2550', size - 2) + '\u255D';
+
+            Console.WriteLine(up.PadLeft(padding));
+
+            for(int i = 0; i < options.Length; i++)
+            {
+                if(i == selected)
+                {
+                    string option = "\u255F" + new string(' ', (size - options[i].Length-1) / 2) + options[i] + new string(' ', (size - options[i].Length-1) / 2) + "\u2562";
+
+                    Console.WriteLine(option.PadLeft(padding));
+                }
+                else
+                {
+                    Console.WriteLine('\u2551' + options[i] + '\u2551');
+                }
+            }
+
+            Console.WriteLine(bottom.PadLeft(padding));
         }
     }
 }

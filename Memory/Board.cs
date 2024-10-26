@@ -13,7 +13,7 @@ namespace Memory
         public int size;
         
 
-        char[] shapes = { '\u25FB', '\u25A7', '\u25B3', '\u25EF', '\u25CA', '\u25BD', '\u25C8', '\u25a3' };
+        char[] shapes = { '\u25FB', '\u25A7', '\u25B3', '\u25CB', '\u25CA', '\u25BD', '\u25C8', '\u25a3' };
         ConsoleColor[] colors = {
             ConsoleColor.White,
             ConsoleColor.Green,

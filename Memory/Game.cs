@@ -26,7 +26,7 @@ namespace Memory
 
         public Game()
         {
-            size = 4;
+            size = 10;
 
             int points = (size * size)/2;
 
@@ -70,7 +70,7 @@ namespace Memory
 
         void playerSelecting()
         {
-            ConsoleKeyInfo keyInfo = Console.ReadKey(intercept: true);
+            ConsoleKeyInfo keyInfo = Console.ReadKey(true);
 
             int x = position.X;
             int y = position.Y;

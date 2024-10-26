@@ -10,7 +10,12 @@ namespace Memory
     {
         static void Main(string[] args)
         {
-            Game memory = new Game();
+            //Game memory = new Game();
+
+            Menu menu = new Menu();
+            menu.mainMenu_display();
+
+            
         }
     }
 }

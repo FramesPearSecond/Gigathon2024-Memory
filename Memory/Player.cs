@@ -6,6 +6,7 @@ namespace Memory
         public string name { get; }
         public int points { get; set; }
 
+
         public Player(string name, int points)
         {
             this.name = name;

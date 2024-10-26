@@ -11,9 +11,7 @@ namespace Memory
     {
         public Card[,] cards;
         public int size;
-
-        public Card card1;
-        public Card card2;
+        
 
         char[] shapes = { '\u25FB', '\u25A7', '\u25B3', '\u25EF', '\u25CA', '\u25BD', '\u25C8', '\u25a3' };
         ConsoleColor[] colors = {
@@ -82,34 +80,13 @@ namespace Memory
 
             this.cards = shuffeld;
         }
-    
-        public void isPair(int position)
+
+
+        public Card uncover(Cursor card)
         {
-            if(card1 == null)
-            {
-                foreach (Card card in cards)
-                {
-                    if(card.id == position)
-                    {
-                        card1 = card;
-                    }
-                }
-            }
-            else
-            {
-                foreach (Card card in cards)
-                {
-                    if (card.id == position)
-                    {
-                        card2 = card;
-                    }
-                }
-
-                if(card1.shape == card2.shape)
-                {
-
-                }
-            }
+            Card inHand = cards[card.X, card.Y];
+            inHand.state = State.Choosed;
+            return inHand;
         }
     }
 }

@@ -21,43 +21,51 @@ namespace Memory
             this.board = board;
             this.size = size;
             player1 = p1;
-            player2 = p2; 
+            player2 = p2;
         }
 
-        public void uiDisplay()
+        public void uiDisplay(bool active)
         {
             Console.Clear();
-            displayPlayer(false);
+            displayPlayer(false, active);
             displayBoard();
-            displayPlayer(true);
-
+            displayPlayer(true, active);
         }
 
-        public void displayPlayer(bool p)
+        public void displayPlayer(bool p, bool a)
         {
             string name;
             ConsoleColor color;
+            ConsoleColor bgColor;
             int padding;
 
             if (!p)
             {
-                name = string.Format("{0} [{1}]", player1.name, player1.points);
+                name = string.Format("[{1}]{0}", player1.name, player1.points);
                 padding = 0;
                 color = ConsoleColor.Red;
+                bgColor = (a) ? ConsoleColor.Black : ConsoleColor.Yellow;
             }
             else
             {
-                name = string.Format("[{1}] {0}", player2.name, player2.points);
+                name = string.Format("{0}[{1}]", player2.name, player2.points);
                 padding = size*3;
                 color = ConsoleColor.Cyan;
+                bgColor = (a) ? ConsoleColor.Blue : ConsoleColor.Black;
             }
+
+
 
             string hr = new string('=', size*3);
 
             Console.ForegroundColor = color;
 
             Console.WriteLine(hr);
+
+            Console.BackgroundColor = bgColor;
             Console.WriteLine(name.PadLeft(padding));
+            Console.BackgroundColor = ConsoleColor.Black;
+
             Console.WriteLine(hr);
 
             Console.ResetColor();
@@ -76,7 +84,7 @@ namespace Memory
 
                 linesCounter++;
             }
-            Console.WriteLine();
+            Console.WriteLine("\n");
 
             Console.ResetColor();
 
@@ -93,29 +101,6 @@ namespace Memory
             displayBoard();
         }
 
-        //public void uncover(int id, bool whichCard)
-        //{
-        //    if (!whichCard)
-        //    {//first card
-        //        viewBoard[id][2] = 3;
-        //        checkedCards[0] = id;
-        //    }
-        //    else
-        //    {//second card
-        //        viewBoard[id][2] = 3;
-        //        checkedCards[1] = id;
-        //    }
-        //}
-
-        //public void cover()
-        //{
-        //    viewBoard[checkedCards[0]][2] = 0;
-        //    viewBoard[checkedCards[1]][2] = 0;
-
-        //    checkedCards[0] = -1;
-        //    checkedCards[0] = -1;
-        //}
-
         private void displayCard(Card card)
         {
             char thumbnail = '\u0023';
@@ -127,11 +112,11 @@ namespace Memory
                     break;
                 case State.CoveredSelected:
                     Console.ForegroundColor = ConsoleColor.Black;
-                    Console.BackgroundColor = ConsoleColor.DarkGray;
+                    Console.BackgroundColor = ConsoleColor.Gray;
                     break;
                 case State.Uncovered:
                     thumbnail = card.shape;
-                    Console.ForegroundColor = ConsoleColor.Gray;
+                    Console.ForegroundColor =card.color;
                     break;
                 case State.UncoveredSelected:
                     thumbnail = card.shape;
@@ -141,6 +126,7 @@ namespace Memory
                 case State.Choosed:
                     thumbnail = card.shape;
                     Console.ForegroundColor = card.color;
+                    Console.BackgroundColor = ConsoleColor.DarkGray;
                     break;
                 case State.ChoosedSelected:
                     thumbnail = card.shape;

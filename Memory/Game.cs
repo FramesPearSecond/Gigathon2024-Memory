@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Media;
+using System.Threading;
+using System.Reflection;
 
 namespace Memory
 {
@@ -17,26 +20,32 @@ namespace Memory
         int size;
         Cursor position;
 
+        Card[] hand = new Card[2];
+
+        bool activePlayer;
+
         public Game()
         {
-            size = 6;
+            size = 4;
 
             int points = (size * size)/2;
 
             createBoard(size);
-            createPlayers("superMario64", "Jack123");
+            createPlayers("Maks", "Mama");
 
-            display = new Animator(table.cards, 6, player1, player2);
+            activePlayer = false;
+
+            display = new Animator(table.cards, size, player1, player2);
 
             position = new Cursor();
             position.X = 0;
             position.Y = 0;
 
-            bool player = false;
 
-            while (true)
+            while (player1.points + player2.points < points)
             {
-                playerSelecting();
+                round();
+                
             }
         }
         void createBoard(int size)
@@ -49,17 +58,18 @@ namespace Memory
             player2 = new Player(p2, 0);
         }
 
-        void round(bool player)
+        void round()
         {
-            Player activePlayer = (player) ? player2 : player1;
+            Player player  = (activePlayer) ? player2 : player1;
+            int points = player.points;
 
-            
+            display.uiDisplay(activePlayer);
+            playerSelecting();
 
         }
 
         void playerSelecting()
         {
-
             ConsoleKeyInfo keyInfo = Console.ReadKey(intercept: true);
 
             int x = position.X;
@@ -82,25 +92,54 @@ namespace Memory
             }
 
             Console.WriteLine("X:{0} Y:{1}", x, y);
-            position.X = (x > size-1 || x < 0) ? position.X : x;
-            position.Y = (y > size-1 || y < 0) ? position.Y : y;
+            position.X = (x > size - 1 || x < 0) ? position.X : x;
+            position.Y = (y > size - 1 || y < 0) ? position.Y : y;
+
+            if (keyInfo.Key == ConsoleKey.Spacebar)
+            {
+                check();
+            }
 
             display.displayCardSelection(position);
 
         }
-            //    if(keyInfo.Key == ConsoleKey.Spacebar)
-            //    {
-            //        if (positions[0] != -1)
-            //        {
-            //            positions[0] = position;
-            //        }
-            //        else if (positions[0] != position)
-            //        {
-            //            positions[1] = position;
-            //        }
-            //    }
 
-            //}
+        void check()
+        {
+            Player player = (activePlayer) ? player2 : player1;
 
+            if (hand[0] == null)
+            {
+                hand[0] = table.uncover(position);
+            }
+            else
+            {
+                hand[1] = table.uncover(position);
+
+
+                if (hand[0].shape == hand[1].shape && hand[0].color == hand[1].color)
+                {
+                    SystemSounds.Hand.Play();
+                    player.points++;
+
+                    hand[0].state = hand[1].state = State.Uncovered;
+                }
+                else
+                {
+                    SystemSounds.Beep.Play();
+                    display.uiDisplay(activePlayer);
+                    Thread.Sleep(1000);
+
+                    activePlayer = !activePlayer;
+
+
+                    hand[0].state = hand[1].state = State.Covered;
+                    
+
+                }
+                hand[0] = hand[1] = null;
+            }
+            
         }
+    }
 }

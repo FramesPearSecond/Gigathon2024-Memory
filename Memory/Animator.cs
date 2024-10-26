@@ -88,7 +88,7 @@ namespace Memory
             
             Card selectedCard = board[point.X, point.Y];
 
-            selectCard(selectedCard.state);
+            selectedCard.state = selectCard(selectedCard.state);
 
             displayBoard();
         }

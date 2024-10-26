@@ -15,7 +15,7 @@ namespace Memory
         Animator display;
 
         int size;
-        int position;
+        Cursor position;
 
         public Game()
         {
@@ -28,10 +28,16 @@ namespace Memory
 
             display = new Animator(table.cards, 6, player1, player2);
 
+            position = new Cursor();
+            position.X = 0;
+            position.Y = 0;
+
             bool player = false;
 
-            display.uiDisplay();
-            Console.ReadKey();
+            while (true)
+            {
+                playerSelecting();
+            }
         }
         void createBoard(int size)
         {
@@ -51,44 +57,50 @@ namespace Memory
 
         }
 
-        //void playerSelecting()
-        //{
+        void playerSelecting()
+        {
 
-        //    ConsoleKeyInfo keyInfo = Console.ReadKey(intercept: true);
+            ConsoleKeyInfo keyInfo = Console.ReadKey(intercept: true);
 
-        //    int select = 0;
+            int x = position.X;
+            int y = position.Y;
 
-        //    switch (keyInfo.Key)
-        //    {
-        //        case ConsoleKey.UpArrow:
-        //            select = position - size;
-        //            break;
-        //        case ConsoleKey.DownArrow:
-        //            select = position + size;
-        //            break;
-        //        case ConsoleKey.LeftArrow:
-        //            select = position - 1;
-        //            break;
-        //        case ConsoleKey.RightArrow:
-        //            select = position + 1;
-        //            break;
-        //    }
+            switch (keyInfo.Key)
+            {
+                case ConsoleKey.UpArrow:
+                    x -=1;
+                    break;
+                case ConsoleKey.DownArrow:
+                    x += 1;
+                    break;
+                case ConsoleKey.LeftArrow:
+                    y -= 1;
+                    break;
+                case ConsoleKey.RightArrow:
+                    y += 1;
+                    break;
+            }
 
-        //    position = (select < 0 || select > (size * size)-1) ? position : select;
+            Console.WriteLine("X:{0} Y:{1}", x, y);
+            position.X = (x > size-1 || x < 0) ? position.X : x;
+            position.Y = (y > size-1 || y < 0) ? position.Y : y;
 
-        //    if(keyInfo.Key == ConsoleKey.Spacebar)
-        //    {
-        //        if (positions[0] != -1)
-        //        {
-        //            positions[0] = position;
-        //        }
-        //        else if (positions[0] != position)
-        //        {
-        //            positions[1] = position;
-        //        }
-        //    }
+            display.displayCardSelection(position);
 
-        //}
+        }
+            //    if(keyInfo.Key == ConsoleKey.Spacebar)
+            //    {
+            //        if (positions[0] != -1)
+            //        {
+            //            positions[0] = position;
+            //        }
+            //        else if (positions[0] != position)
+            //        {
+            //            positions[1] = position;
+            //        }
+            //    }
 
-    }
+            //}
+
+        }
 }

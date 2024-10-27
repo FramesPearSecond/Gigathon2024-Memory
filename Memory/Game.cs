@@ -74,8 +74,18 @@ namespace Memory
 
         void loadGame()
         {
-            SavesMenager.Load(menu.loadMenu(SavesMenager.MenuLoad()), ref table, ref player1, ref player2, ref activePlayer);
-            size = table.size;
+            string[] files = SavesMenager.MenuLoad();
+
+            if(files.Length != 0)
+            {
+                SavesMenager.Load(menu.loadMenu(files), ref table, ref player1, ref player2, ref activePlayer);
+                size = table.size;
+            }
+            else
+            {
+                SystemSounds.Beep.Play();
+                exit = true;
+            }
         }
 
         void displayMenu()

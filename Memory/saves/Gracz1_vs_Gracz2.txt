@@ -1,4 +1,0 @@
-﻿2,▧,Green,Covered;13,◈,Yellow,Covered;5,△,DarkCyan,Covered;1,◻,White,Covered;0,◻,White,Covered;14,▣,White,Uncovered;8,◊,DarkYellow,Covered;3,▧,Green,CoveredSelected;10,▽,DarkRed,Covered;11,▽,DarkRed,Covered;9,◊,DarkYellow,Covered;6,○,Magenta,Covered;7,○,Magenta,Covered;12,◈,Yellow,Covered;15,▣,White,Uncovered;4,△,DarkCyan,Covered;
-Gracz1,0
-Gracz2,1
-1

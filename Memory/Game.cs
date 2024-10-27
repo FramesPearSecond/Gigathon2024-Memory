@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Media;
 using System.Threading;
 using System.Reflection;
+using System.IO;
 
 namespace Memory
 {
@@ -28,11 +29,10 @@ namespace Memory
 
         public Game()
         {
-
             menu = new Menu();
 
             displayMenu();
-            
+
             activePlayer = false;
 
             display = new Animator(table.cards, size, player1, player2);
@@ -41,11 +41,9 @@ namespace Memory
             position.X = 0;
             position.Y = 0;
 
-
             while (player1.points + player2.points < (size * size) / 2)
             {
                 round();
-                
             }
         }
         void createBoard(int size)
@@ -76,6 +74,9 @@ namespace Memory
             {
                 case 0:
                     createNewGame();
+                    break;
+                case 1:
+                    menu.loadMenu(SavesMenager.MenuLoad());
                     break;
                 case 2:
                     Environment.Exit(0);
@@ -115,14 +116,21 @@ namespace Memory
                     break;
             }
 
-            Console.WriteLine("X:{0} Y:{1}", x, y);
-            position.X = (x > size - 1 || x < 0) ? position.X : x;
-            position.Y = (y > size - 1 || y < 0) ? position.Y : y;
-
             if (keyInfo.Key == ConsoleKey.Spacebar)
             {
                 check();
             }
+            if (keyInfo.Modifiers == ConsoleModifiers.Shift && keyInfo.Key == ConsoleKey.S)
+            {
+                SavesMenager.Save(table.cards, player1, player2, activePlayer);
+            }
+            if(keyInfo.Key == ConsoleKey.Escape)
+            {
+                Environment.Exit(0);
+            }
+
+            position.X = (x > size - 1 || x < 0) ? position.X : x;
+            position.Y = (y > size - 1 || y < 0) ? position.Y : y;
 
             display.cardSelection(position);
 
@@ -136,11 +144,16 @@ namespace Memory
             {
                 hand[0] = table.uncover(position);
             }
-            else
+            else if (hand[0] != null)
             {
                 hand[1] = table.uncover(position);
 
-
+                if (hand[0].id == hand[1].id)
+                {
+                    SystemSounds.Beep.Play();
+                    hand[1].state = State.Covered;
+                }
+                else
                 if (hand[0].shape == hand[1].shape && hand[0].color == hand[1].color)
                 {
                     SystemSounds.Hand.Play();
@@ -163,7 +176,6 @@ namespace Memory
                 }
                 hand[0] = hand[1] = null;
             }
-            
         }
     }
 }

@@ -29,7 +29,7 @@ namespace Memory
             while (notSelected)
             {
                 Console.Clear();
-                Animator.displayMainMenu(mainMenuOptions, selectedOption);
+                Animator.DisplayMenu(mainMenuOptions, selectedOption);
                 ConsoleKey key = Console.ReadKey(true).Key;
 
                 switch (key)
@@ -46,6 +46,7 @@ namespace Memory
                         break;
                 }
             }
+
         }
 
         public string[] newGameMenu()
@@ -106,6 +107,34 @@ namespace Memory
 
             }
             return newGamedata;
+        }
+
+        public int loadMenu(string[] files)
+        {
+            bool notSelected = true;
+
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
+            while (notSelected)
+            {
+                Console.Clear();
+                Animator.DisplayMenu(files, selectedOption);
+                ConsoleKey key = Console.ReadKey(true).Key;
+
+                switch (key)
+                {
+                    case ConsoleKey.UpArrow:
+                        selectedOption = (selectedOption > 0) ? selectedOption - 1 : mainMenuOptions.Length - 1;
+                        break;
+                    case ConsoleKey.DownArrow:
+                        selectedOption = (selectedOption < mainMenuOptions.Length - 1) ? selectedOption + 1 : 0;
+                        break;
+                    case ConsoleKey.Enter:
+                    case ConsoleKey.Spacebar:
+                        notSelected = false;
+                        break;
+                }
+            }
+            return selectedOption;
         }
     }
 }

@@ -85,8 +85,16 @@ namespace Memory
         public Card uncover(Cursor card)
         {
             Card inHand = cards[card.X, card.Y];
-            inHand.state = State.Choosed;
-            return inHand;
+
+            if(inHand.state == State.UncoveredSelected)
+            {
+                return null;
+            }
+            else
+            {
+                inHand.state = State.Choosed;
+                return inHand;
+            }
         }
     }
 }

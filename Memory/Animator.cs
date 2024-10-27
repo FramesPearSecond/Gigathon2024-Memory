@@ -34,6 +34,7 @@ namespace Memory
             displayPlayer(false, active);
             displayBoard();
             displayPlayer(true, active);
+            displayFooter();
         }
 
         void displayPlayer(bool p, bool a)
@@ -106,7 +107,7 @@ namespace Memory
             {
                 if(linesCounter % size == 0){
                     Console.Write("\n");
-                    Console.Write("".PadLeft((int)(width - size)));
+                    Console.Write("".PadLeft((width - size)-3));
                 }
 
                 Console.Write(displayCard(card));
@@ -131,10 +132,21 @@ namespace Memory
             "  \\/_/  \\/_/   \\/_____/   \\/_/  \\/_/   \\/_____/   \\/_/ /_/   \\/_____/ ";
             
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine(title+"\n");
+            Console.WriteLine(title);
             Console.ResetColor();
+            Console.WriteLine(("Gigathon 2024").PadLeft(width*2) + "\n");
         }
 
+        void displayFooter()
+        {
+            string save = "Zapis [Shift+S]";
+            string exit = "Wyjście [Esc]";
+
+
+            Console.ForegroundColor = ConsoleColor.DarkGray;
+            Console.WriteLine(save + exit.PadLeft((width*2)-save.Length));
+            Console.ResetColor();
+        }
         public void cardSelection(Cursor point)
         {
             resetState();
@@ -215,7 +227,7 @@ namespace Memory
             }
         }
         
-        public static void displayMainMenu(string[] options, int selected)
+        public static void DisplayMenu(string[] options, int selected)
         {
             displayTitle();
             int padding = (int)(width * 1.5);

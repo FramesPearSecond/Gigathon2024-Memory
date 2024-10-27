@@ -1,0 +1,4 @@
+﻿3,Green,Covered,▧;1,White,Covered,◻;0,White,Covered,◻;2,Green,Covered,▧;
+Gracz1,0
+Gracz2,0
+0

@@ -163,7 +163,12 @@ namespace Memory
             {
                 hand[1] = table.uncover(position);
 
-                if (hand[0].id == hand[1].id)
+                if (hand[1] == null)
+                {
+                    SystemSounds.Beep.Play();
+                    hand[0].state = State.Covered;
+                }
+                else if (hand[0].id == hand[1].id)
                 {
                     SystemSounds.Beep.Play();
                     hand[1].state = State.Covered;

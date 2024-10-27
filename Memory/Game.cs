@@ -29,7 +29,11 @@ namespace Memory
 
             while (true)
             {
+                exit = false;
+                
                 displayMenu();
+
+                if (exit) { continue; }
 
                 display = new Animator(table.cards, size, player1, player2);
 
@@ -41,10 +45,8 @@ namespace Memory
                 {
                     round();
                 }
-                if (exit)
-                {
-                    continue;
-                }
+                if (exit) { continue;}
+                
                 display.displayEndScreen();
                 Console.ReadKey();
             }
@@ -89,6 +91,9 @@ namespace Memory
                     loadGame();
                     break;
                 case 2:
+                    info();
+                    break;
+                case 3:
                     Environment.Exit(0);
                     break;
             }
@@ -186,6 +191,33 @@ namespace Memory
                 }
                 hand[0] = hand[1] = null;
             }
+        }
+
+        void info()
+        {
+            string[] text =
+            {
+                "Autor: Maksymilian Gruszka",
+                "Czcionka tytułowa:",
+                "//patorjk.com/software/taag/",
+                "Wyjście [Esc]"
+            };
+
+            while (true)
+            {
+                Console.Clear();
+                Animator.DisplayMenu(text, text.Length);
+
+                ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+
+                if (keyInfo.Key == ConsoleKey.Escape)
+                {
+                    exit = true;
+                    break;
+                }
+            }
+
+            
         }
     }
 }

@@ -323,5 +323,6 @@ namespace Memory
             Console.WriteLine(text.PadLeft(width+(text.Length)/2));
             
         }
+
     }
 }

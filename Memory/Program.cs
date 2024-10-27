@@ -12,7 +12,10 @@ namespace Memory
         {
             Game memory = new Game();
 
-            
+            Console.WriteLine();
+            Console.WriteLine();
+
+
         }
     }
 }

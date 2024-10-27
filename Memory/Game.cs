@@ -33,8 +33,6 @@ namespace Memory
 
             displayMenu();
 
-            activePlayer = false;
-
             display = new Animator(table.cards, size, player1, player2);
 
             position = new Cursor();
@@ -45,6 +43,7 @@ namespace Memory
             {
                 round();
             }
+
         }
         void createBoard(int size)
         {
@@ -59,11 +58,16 @@ namespace Memory
         void createNewGame()
         {
             string[] gameData = menu.newGameMenu();
-
+            activePlayer = false;
             createPlayers(gameData[0], gameData[1]);
             size = int.Parse(gameData[2]);
             createBoard(size);
+        }
 
+        void loadGame()
+        {
+            SavesMenager.Load(menu.loadMenu(SavesMenager.MenuLoad()), ref table, ref player1, ref player2, ref activePlayer);
+            size = table.size;
         }
 
         void displayMenu()
@@ -76,7 +80,7 @@ namespace Memory
                     createNewGame();
                     break;
                 case 1:
-                    menu.loadMenu(SavesMenager.MenuLoad());
+                    loadGame();
                     break;
                 case 2:
                     Environment.Exit(0);

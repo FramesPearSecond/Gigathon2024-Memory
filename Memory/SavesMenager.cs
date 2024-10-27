@@ -11,6 +11,7 @@ namespace Memory
     {
         static string fileName;
         static string SavePath = "..\\..\\saves\\";
+        static string[] Files = Directory.GetFiles(SavePath, "*.txt");
 
         static Dictionary<string, State> States = new Dictionary<string, State>
         {
@@ -50,27 +51,28 @@ namespace Memory
                     foreach (Card card in cards)
                     {
                         int id = card.id;
+                        char shape = card.shape;
                         string state = "";
                         string color = "";
-                        char shape = card.shape;
+
+                        foreach (KeyValuePair<string, ConsoleColor> colorDict in Colors)
+                        {
+                            if (card.color == colorDict.Value)
+                            {
+                                color = colorDict.Key;
+                            }
+                        }
 
                         foreach (KeyValuePair<string, State> stateDict in States)
                         {
                             if (card.state == stateDict.Value)
                             {
-                                color = stateDict.Key;
+                                state = stateDict.Key;
                             }
                         }
+                        
 
-                        foreach (KeyValuePair<string, ConsoleColor> colorDict in Colors)
-                        {
-                            if(card.color == colorDict.Value)
-                            {
-                                state = colorDict.Key;
-                            }
-                        }
-
-                        saveWriter.Write("{0},{1},{2},{3};",id, state, color, shape);
+                        saveWriter.Write("{0},{1},{2},{3};",id, shape, color, state);
                     }
                     saveWriter.Write('\n');
 
@@ -101,14 +103,73 @@ namespace Memory
 
         public static string[] MenuLoad()
         {
-            string[] files = Directory.GetFiles(SavePath, "*.txt");
-            string[] filesName = new string[files.Length];
+            string[] filesName = new string[Files.Length];
 
-            for (int i = 0; i < files.Length; i++)
+            for (int i = 0; i < Files.Length; i++)
             {
-                filesName[i] = Path.GetFileName(files[i]);
+                filesName[i] = Path.GetFileName(Files[i]);
             }
             return filesName;
+        }
+
+        public static void Load(int fileNumber, ref Board board, ref Player player1, ref Player player2, ref bool active)
+        {
+            string file = Files[fileNumber];
+
+            try
+            {
+                using (StreamReader saveLoader = new StreamReader(file))
+                {
+                    string cardsLine = saveLoader.ReadLine();
+                    cardsLine = cardsLine.Substring(0, cardsLine.Length - 1);
+                    string[] rawCards = cardsLine.Split(';');
+                    string[][] dataCards = new string[rawCards.Length][];
+
+                    int lenght = (int)Math.Sqrt(rawCards.Length);
+
+                    Card[,] cards = new Card[lenght, lenght];
+
+                    string p1Line = saveLoader.ReadLine();
+                    string p2Line = saveLoader.ReadLine();
+                    string activeLine = saveLoader.ReadLine();
+
+                    for (int i = 0; i < rawCards.Length; i++)
+                    {
+                        dataCards[i] = rawCards[i].Split(',');
+                    }
+
+                    int counter = 0;
+
+                    foreach (string[] data in dataCards)
+                    {
+                        //Console.WriteLine("{6} {4}:{5} id:{0}, shape:{1}, color:{2}, state:{3}",
+                        //    data[0], data[1], data[2], data[3], counter / lenght, counter % lenght, counter);
+
+                        int id = int.Parse(data[0]);
+                        char shape = Char.Parse(data[1]);
+                        ConsoleColor color = Colors[data[2]];
+                        State state = States[data[3]];
+
+                        cards[(counter / lenght), (counter % lenght)] = new Card(id, shape, color, state);
+
+                        counter++;
+                    }
+
+                    board = new Board(cards, lenght);
+
+                    string[] p1 = p1Line.Split(',');
+                    player1 = new Player(p1[0], int.Parse(p1[1]));
+
+                    string[] p2 = p2Line.Split(',');
+                    player2 = new Player(p2[0], int.Parse(p2[1]));
+
+                    active = int.Parse(activeLine) != 0;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error: " + e.ToString());
+            }
         }
     }
 }

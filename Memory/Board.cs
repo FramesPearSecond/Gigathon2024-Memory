@@ -52,6 +52,12 @@ namespace Memory
 
         }
 
+        public Board(Card[,] cards, int size)
+        {
+            this.cards = cards;
+            this.size = size;
+        }
+
         void shuffling()
         {
             Card[,] shuffeld = new Card[size, size];

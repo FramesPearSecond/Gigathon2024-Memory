@@ -4,7 +4,6 @@ namespace Memory
 {
     internal class Card
     {
-        public static int numOfCards;
         public int id;
         public char shape;
         public ConsoleColor color;
@@ -16,7 +15,13 @@ namespace Memory
             this.shape = shape;
             this.color = color;
             this.state = State.Covered;
-            numOfCards++;
+        }
+        public Card(int id, char shape, ConsoleColor color, State state)
+        {
+            this.id = id;
+            this.shape = shape;
+            this.color = color;
+            this.state = state;
         }
     }
 }

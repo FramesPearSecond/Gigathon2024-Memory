@@ -28,8 +28,9 @@ namespace Memory
         public void uiDisplay(bool active)
         {
             Console.Clear();
+            string tilte = displayTitle();
             displayPlayer(false, active);
-            displayBoard();
+            displayBoard(tilte.Length/8);
             displayPlayer(true, active);
         }
 
@@ -76,7 +77,7 @@ namespace Memory
             Console.ResetColor();
         }
 
-        void displayBoard()
+        void displayBoard(int padding)
         {
 
             int linesCounter = 0;
@@ -247,8 +248,12 @@ namespace Memory
 
                 if (i == stage)
                 {
-                    string option = string.Format("{2}{0} {1}", options[i], input[i], "\u255F");
-                    Console.WriteLine(option.PadLeft(padding - options[i].Length + addPadding));
+                    string option = string.Format("{0} {1}", options[i], input[i]);
+                    Console.Write("\u255F".PadLeft(padding - option.Length - options[i].Length + addPadding));
+                    Console.BackgroundColor = ConsoleColor.Yellow;
+                    Console.ForegroundColor = ConsoleColor.Black;
+                    Console.Write(option+"\n");
+                    Console.ResetColor();
                 }
                 else
                 {

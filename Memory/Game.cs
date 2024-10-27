@@ -17,6 +17,8 @@ namespace Memory
         Board table;
         Animator display;
 
+        Menu menu;
+
         int size;
         Cursor position;
 
@@ -26,13 +28,10 @@ namespace Memory
 
         public Game()
         {
-            size = 10;
+            menu = new Menu();
 
-            int points = (size * size)/2;
-
-            createBoard(size);
-            createPlayers("Maks", "Mama");
-
+            displayMenu();
+            
             activePlayer = false;
 
             display = new Animator(table.cards, size, player1, player2);
@@ -42,7 +41,7 @@ namespace Memory
             position.Y = 0;
 
 
-            while (player1.points + player2.points < points)
+            while (player1.points + player2.points < (size * size) / 2)
             {
                 round();
                 
@@ -58,6 +57,30 @@ namespace Memory
             player2 = new Player(p2, 0);
         }
 
+        void createNewGame()
+        {
+            string[] gameData = menu.newGameMenu();
+
+            createPlayers(gameData[0], gameData[1]);
+            size = int.Parse(gameData[2]);
+            createBoard(size);
+
+        }
+
+        void displayMenu()
+        {
+            menu.mainMenu();
+
+            switch (menu.selectedOption)
+            {
+                case 0:
+                    createNewGame();
+                    break;
+                case 2:
+                    Environment.Exit(0);
+                    break;
+            }
+        }
         void round()
         {
             Player player  = (activePlayer) ? player2 : player1;

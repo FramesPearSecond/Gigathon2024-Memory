@@ -98,13 +98,13 @@ namespace Memory
         public static string displayTitle()
         {
             string title = 
-                   " __    __     ______     __    __     ______     ______     __  __    \n" +
-                  "/\\ \"-./  \\   /\\  ___\\   /\\ \"-./  \\   /\\  __ \\   /\\  == \\   /\\ \\_\\ \\   \n" +
-                  "\\ \\ \\-./\\ \\  \\ \\  __\\   \\ \\ \\-./\\ \\  \\ \\ \\/\\ \\  \\ \\  __<   \\ \\____ \\  \n" +
-                  " \\ \\_\\ \\ \\_\\  \\ \\_____\\  \\ \\_\\ \\ \\_\\  \\ \\_____\\  \\ \\_\\ \\_\\  \\/\\_____\\ \n" +
-                  "  \\/_/  \\/_/   \\/_____/   \\/_/  \\/_/   \\/_____/   \\/_/ /_/   \\/_____/ ";
+            " __    __     ______     __    __     ______     ______     __  __    \n" +
+            "/\\ \"-./  \\   /\\  ___\\   /\\ \"-./  \\   /\\  __ \\   /\\  == \\   /\\ \\_\\ \\   \n" +
+            "\\ \\ \\-./\\ \\  \\ \\  __\\   \\ \\ \\-./\\ \\  \\ \\ \\/\\ \\  \\ \\  __<   \\ \\____ \\  \n" +
+            " \\ \\_\\ \\ \\_\\  \\ \\_____\\  \\ \\_\\ \\ \\_\\  \\ \\_____\\  \\ \\_\\ \\_\\  \\/\\_____\\ \n" +
+            "  \\/_/  \\/_/   \\/_____/   \\/_/  \\/_/   \\/_____/   \\/_/ /_/   \\/_____/ ";
             
-            Console.WriteLine(title);
+            Console.WriteLine(title+"\n");
 
             return title;
         }
@@ -198,26 +198,69 @@ namespace Memory
             int size = title.Length / 16;
             int padding = size * 2;
 
-            string up = '\u2554' + new string('\u2550', size - 2) + '\u2557';
-            string bottom = '\u255A' + new string('\u2550', size - 2) + '\u255D';
+            string up = '\u2565' + new string('\u2500', size - 2) + '\u2565';
+            string bottom = '\u2568' + new string('\u2500', size - 2) + '\u2568';
 
             Console.WriteLine(up.PadLeft(padding));
 
             for(int i = 0; i < options.Length; i++)
             {
-                if(i == selected)
-                {
-                    string option = "\u255F" + new string(' ', (size - options[i].Length-1) / 2) + options[i] + new string(' ', (size - options[i].Length-1) / 2) + "\u2562";
+                int optionPadding = (size - options[i].Length - 1) / 2;
+                string padLeft = new string(' ', optionPadding);
+                string padRight = (options[i].Length % 2 == 0) ? padLeft : new string(' ', optionPadding-1);
+                string option = padLeft + options[i] + padRight;
 
-                    Console.WriteLine(option.PadLeft(padding));
+                if (i == selected)
+                {
+                    Console.Write("\u255F".PadLeft(padding-option.Length-1));
+                    Console.BackgroundColor = ConsoleColor.Yellow;
+                    Console.ForegroundColor = ConsoleColor.Black;
+                    Console.Write(option);
+                    Console.ResetColor();
+                    Console.Write("\u2562\n");
                 }
                 else
                 {
-                    Console.WriteLine('\u2551' + options[i] + '\u2551');
+                    option = "\u2551" + option + "\u2551";
+                    Console.WriteLine(option.PadLeft(padding));
                 }
+                
+
             }
 
             Console.WriteLine(bottom.PadLeft(padding));
+        }
+
+        public static void displayNewGameMenu(string[] options, string[] input, int stage)
+        {
+            string title = displayTitle();
+            int padding = title.Length / 9;
+
+            string up = '\u2565' + new string('\u2500', 20);
+            string bottom = '\u2568' + new string('\u2500', 20);
+
+            Console.WriteLine(up.PadLeft(padding+3));
+
+            for (int i = 0; i < options.Length; i++)
+            {
+                int addPadding = (input[i] != null) ? input[i].Length : 0; 
+
+                if (i == stage)
+                {
+                    string option = string.Format("{2}{0} {1}", options[i], input[i], "\u255F");
+                    Console.WriteLine(option.PadLeft(padding - options[i].Length + addPadding));
+                }
+                else
+                {
+                    string option = string.Format("{2}{0} {1}", options[i], input[i], "\u2551");
+                    Console.WriteLine(option.PadLeft(padding - options[i].Length + addPadding));
+                }
+            }
+
+            Console.WriteLine(bottom.PadLeft(padding+3));
+
+            //Console.WriteLine("1.{0} {3}\n1.{1} {4}\n1.{2} {5}\n",
+            //    options[0], options[1], options[2], input[0], input[1], input[2]);
         }
     }
 }

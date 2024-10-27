@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Memory
 {
@@ -302,6 +298,30 @@ namespace Memory
             }
 
             Console.WriteLine(hrBottom.PadLeft(hrPadding));
+        }
+
+        public void displayEndScreen()
+        {
+            Console.Clear();
+            displayTitle();
+
+            string winner;
+
+            if(player1.points > player2.points)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                winner = player1.name;
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.Cyan;
+                winner = player2.name;
+            }
+
+            string text = string.Format("Wygrywa {0}!", winner);
+
+            Console.WriteLine(text.PadLeft(width+(text.Length)/2));
+            
         }
     }
 }

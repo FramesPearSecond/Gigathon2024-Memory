@@ -1,12 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Media;
 using System.Threading;
-using System.Reflection;
-using System.IO;
 
 namespace Memory
 {
@@ -27,22 +21,34 @@ namespace Memory
 
         bool activePlayer;
 
+        bool exit = false;
+
         public Game()
         {
             menu = new Menu();
 
-            displayMenu();
-
-            display = new Animator(table.cards, size, player1, player2);
-
-            position = new Cursor();
-            position.X = 0;
-            position.Y = 0;
-
-            while (player1.points + player2.points < (size * size) / 2)
+            while (true)
             {
-                round();
+                displayMenu();
+
+                display = new Animator(table.cards, size, player1, player2);
+
+                position = new Cursor();
+                position.X = 0;
+                position.Y = 0;
+
+                while (player1.points + player2.points < (size * size) / 2 && !exit)
+                {
+                    round();
+                }
+                if (exit)
+                {
+                    continue;
+                }
+                display.displayEndScreen();
+                Console.ReadKey();
             }
+
 
         }
         void createBoard(int size)
@@ -120,7 +126,7 @@ namespace Memory
                     break;
             }
 
-            if (keyInfo.Key == ConsoleKey.Spacebar)
+            if (keyInfo.Key == ConsoleKey.Spacebar || keyInfo.Key == ConsoleKey.Enter)
             {
                 check();
             }
@@ -130,7 +136,7 @@ namespace Memory
             }
             if(keyInfo.Key == ConsoleKey.Escape)
             {
-                Environment.Exit(0);
+                exit = true;
             }
 
             position.X = (x > size - 1 || x < 0) ? position.X : x;

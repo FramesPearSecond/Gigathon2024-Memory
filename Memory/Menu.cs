@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Memory
 {
@@ -15,7 +11,7 @@ namespace Memory
 
         public Menu()
         {
-            mainMenuOptions = new string[] { "Nowa gra", "Wczytaj grę", "Zamknij" };
+            mainMenuOptions = new string[] { "Nowa gra", "Wczytaj grę", "Info", "Zamknij" };
             newGameMenuOptions = new string[] { "Gracz 1:", "Gracz 2:", "Rozmiar:" };
 
             selectedOption = 0;
@@ -112,6 +108,7 @@ namespace Memory
         public int loadMenu(string[] files)
         {
             bool notSelected = true;
+            selectedOption = 0;
 
             Console.OutputEncoding = System.Text.Encoding.UTF8;
             while (notSelected)

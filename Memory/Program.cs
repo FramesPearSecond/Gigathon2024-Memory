@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Memory
 {
@@ -11,10 +12,7 @@ namespace Memory
         static void Main(string[] args)
         {
             Game memory = new Game();
-
-            Console.WriteLine();
-            Console.WriteLine();
-
+            
 
         }
     }

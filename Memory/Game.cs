@@ -28,6 +28,7 @@ namespace Memory
 
         public Game()
         {
+
             menu = new Menu();
 
             displayMenu();
@@ -123,7 +124,7 @@ namespace Memory
                 check();
             }
 
-            display.displayCardSelection(position);
+            display.cardSelection(position);
 
         }
 

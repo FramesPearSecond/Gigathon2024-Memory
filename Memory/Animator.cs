@@ -15,6 +15,8 @@ namespace Memory
 
         int size;
 
+        static int width = 34;
+
         public Animator(Card[,] board, int size, Player p1, Player p2)
         {
             Console.OutputEncoding = Encoding.UTF8;
@@ -28,9 +30,9 @@ namespace Memory
         public void uiDisplay(bool active)
         {
             Console.Clear();
-            string tilte = displayTitle();
+            displayTitle();
             displayPlayer(false, active);
-            displayBoard(tilte.Length/8);
+            displayBoard();
             displayPlayer(true, active);
         }
 
@@ -38,55 +40,78 @@ namespace Memory
         {
             string name;
             ConsoleColor color;
+            ConsoleColor fontColor;
             ConsoleColor bgColor;
             int padding;
 
+            string hr = new string('\u2550', 32);
+            string upHr = '\u2552' + hr + '\u2555';
+            string boHr = '\u2558' + hr + '\u255B';
+
             if (!p)
             {
-                name = string.Format("[{1}]{0}", player1.name, player1.points);
+                name = string.Format("[{1}] {0}", player1.name, player1.points);
                 padding = 0;
                 color = ConsoleColor.Red;
-                bgColor = (a) ? ConsoleColor.Black : ConsoleColor.Yellow;
+                if (!a)
+                {
+                    fontColor = ConsoleColor.Black;
+                    bgColor = ConsoleColor.Yellow;
+                }
+                else
+                {
+                    fontColor = ConsoleColor.Red;
+                    bgColor = ConsoleColor.Black;
+                }
             }
             else
             {
-                name = string.Format("{0}[{1}]", player2.name, player2.points);
-                padding = size*3;
+                name = string.Format("{0} [{1}]", player2.name, player2.points);
+                padding = 68;
                 color = ConsoleColor.Cyan;
-                bgColor = (a) ? ConsoleColor.Blue : ConsoleColor.Black;
+                if (a)
+                {
+                    fontColor = ConsoleColor.Black;
+                    bgColor = ConsoleColor.Yellow;
+                }
+                else
+                {
+                    fontColor = ConsoleColor.Cyan;
+                    bgColor = ConsoleColor.Black;
+                }
             }
-
-
-
-            string upHr = new string('\u2550', (size * 3)-2);
-            upHr = '\u2552' + upHr + '\u2555';
-
-            string boHr = new string('\u2550', (size * 3) - 2);
-            boHr = '\u2558' + boHr + '\u255B';
 
             Console.ForegroundColor = color;
 
-            Console.WriteLine(upHr);
+            Console.WriteLine(upHr.PadLeft(padding));
+            Console.Write(" ".PadLeft((padding > 0)? padding - name.Length - 1 : 0));
 
             Console.BackgroundColor = bgColor;
-            Console.WriteLine(name.PadLeft(padding));
-            Console.BackgroundColor = ConsoleColor.Black;
+            Console.ForegroundColor = fontColor;
+            Console.Write(name+"\n");
 
-            Console.WriteLine(boHr);
+            Console.ResetColor();
+
+            Console.ForegroundColor = color;
+            Console.WriteLine(boHr.PadLeft(padding));
 
             Console.ResetColor();
         }
 
-        void displayBoard(int padding)
+        void displayBoard()
         {
-
             int linesCounter = 0;
 
             foreach (Card card in board)
             {
-               if(linesCounter % size == 0) { Console.Write("\n"); }
+                if(linesCounter % size == 0){
+                    Console.Write("\n");
+                    Console.Write("".PadLeft((int)(width - size)));
+                }
 
-                displayCard(card);
+                Console.Write(displayCard(card));
+
+                Console.ResetColor();
 
                 linesCounter++;
             }
@@ -96,7 +121,7 @@ namespace Memory
 
         }
 
-        public static string displayTitle()
+        public static void displayTitle()
         {
             string title = 
             " __    __     ______     __    __     ______     ______     __  __    \n" +
@@ -105,12 +130,12 @@ namespace Memory
             " \\ \\_\\ \\ \\_\\  \\ \\_____\\  \\ \\_\\ \\ \\_\\  \\ \\_____\\  \\ \\_\\ \\_\\  \\/\\_____\\ \n" +
             "  \\/_/  \\/_/   \\/_____/   \\/_/  \\/_/   \\/_____/   \\/_/ /_/   \\/_____/ ";
             
+            Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine(title+"\n");
-
-            return title;
+            Console.ResetColor();
         }
 
-        public void displayCardSelection(Cursor point)
+        public void cardSelection(Cursor point)
         {
             resetState();
             
@@ -118,10 +143,9 @@ namespace Memory
 
             selectedCard.state = selectCard(selectedCard.state);
 
-            displayBoard();
         }
 
-        void displayCard(Card card)
+        string displayCard(Card card)
         {
             char thumbnail = '\u2573';
 
@@ -154,9 +178,8 @@ namespace Memory
                     Console.BackgroundColor = ConsoleColor.Gray;
                     break;
             }
-            Console.Write("[{0}]", thumbnail);
 
-            Console.ResetColor();
+            return string.Format("[{0}]", thumbnail);
         }
 
         State selectCard(State card)
@@ -194,19 +217,17 @@ namespace Memory
         
         public static void displayMainMenu(string[] options, int selected)
         {
-            
-            string title = displayTitle();
-            int size = title.Length / 16;
-            int padding = size * 2;
+            displayTitle();
+            int padding = (int)(width * 1.5);
 
-            string up = '\u2565' + new string('\u2500', size - 2) + '\u2565';
-            string bottom = '\u2568' + new string('\u2500', size - 2) + '\u2568';
+            string up = '\u2565' + new string('\u2500', width - 2) + '\u2565';
+            string bottom = '\u2568' + new string('\u2500', width - 2) + '\u2568';
 
             Console.WriteLine(up.PadLeft(padding));
 
             for(int i = 0; i < options.Length; i++)
             {
-                int optionPadding = (size - options[i].Length - 1) / 2;
+                int optionPadding = (width - options[i].Length - 1) / 2;
                 string padLeft = new string(' ', optionPadding);
                 string padRight = (options[i].Length % 2 == 0) ? padLeft : new string(' ', optionPadding-1);
                 string option = padLeft + options[i] + padRight;
@@ -234,38 +255,41 @@ namespace Memory
 
         public static void displayNewGameMenu(string[] options, string[] input, int stage)
         {
-            string title = displayTitle();
-            int padding = title.Length / 9;
+            displayTitle();
 
-            string up = '\u2565' + new string('\u2500', 20);
-            string bottom = '\u2568' + new string('\u2500', 20);
+            int hrPadding = width + 18;
+            string hrUp = '\u2565' + new string('\u2500', 34) + '\u2565';
+            string hrBottom = '\u2568' + new string('\u2500', 34) + '\u2568';
 
-            Console.WriteLine(up.PadLeft(padding+3));
+            Console.WriteLine(hrUp.PadLeft(hrPadding));
 
             for (int i = 0; i < options.Length; i++)
             {
-                int addPadding = (input[i] != null) ? input[i].Length : 0; 
+                int addPadding = (input[i] != null) ? input[i].Length : 0;
+                string rightPadding = new string(' ', width - addPadding - options[i].Length - 1);
 
                 if (i == stage)
                 {
                     string option = string.Format("{0} {1}", options[i], input[i]);
-                    Console.Write("\u255F".PadLeft(padding - option.Length - options[i].Length + addPadding));
+                    Console.Write("\u255F".PadLeft(width - option.Length - options[i].Length + addPadding));
+
                     Console.BackgroundColor = ConsoleColor.Yellow;
                     Console.ForegroundColor = ConsoleColor.Black;
-                    Console.Write(option+"\n");
+
+                    Console.Write(option + rightPadding);
                     Console.ResetColor();
+                    Console.Write("\u2562\n");
                 }
                 else
                 {
                     string option = string.Format("{2}{0} {1}", options[i], input[i], "\u2551");
-                    Console.WriteLine(option.PadLeft(padding - options[i].Length + addPadding));
+                    Console.Write(option.PadLeft(width - options[i].Length + addPadding) + rightPadding);
+                    Console.ResetColor();
+                    Console.Write("\u2551\n");
                 }
             }
 
-            Console.WriteLine(bottom.PadLeft(padding+3));
-
-            //Console.WriteLine("1.{0} {3}\n1.{1} {4}\n1.{2} {5}\n",
-            //    options[0], options[1], options[2], input[0], input[1], input[2]);
+            Console.WriteLine(hrBottom.PadLeft(hrPadding));
         }
     }
 }

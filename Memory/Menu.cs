@@ -96,7 +96,7 @@ namespace Memory
                     {
                         input = input.Remove(input.Length - 1);
                     }
-                    else if(char.IsLetter(keyInfo.KeyChar) && input.Length <= 12)
+                    else if((char.IsLetter(keyInfo.KeyChar) || char.IsDigit(keyInfo.KeyChar)) && input.Length <= 24)
                     {
                         input += keyInfo.KeyChar;
                     }
